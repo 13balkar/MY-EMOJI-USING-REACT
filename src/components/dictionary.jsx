@@ -1,0 +1,70 @@
+import React from "react";
+// import emojis from "../emojiapp";
+import Entry from "./Entry";
+function CreateEntry(em){
+    return <Entry emoji={em.character} name={em.unicodeName} meaning={em.codePoint} />;
+}
+
+class Dict extends React.Component {
+    constructor(props) {
+        super(props);
+   
+        this.state = {
+            items: [],
+            DataisLoaded: false
+        };
+    }
+    componentDidMount() {
+        fetch("https://emoji-api.com/emojis?access_key=171678295c5b133d9eb7e4ef22e7d67ced3c31e3")
+            .then((res) => res.json())
+            .then((json) => {
+                this.setState({
+                    items: json,
+                    DataisLoaded: true
+                });
+            })
+    }
+    render() {
+        const { DataisLoaded, items } = this.state;
+        if (!DataisLoaded) return <div>
+            <h1> Pleses wait some time.... </h1> </div> ;
+   
+    
+    return  <dl className="dictionary">
+       {items.map(CreateEntry)}
+    </dl> ;
+}
+}
+
+function Dic(){
+    const [colors, change3] = React.useState("black");
+    const [flag, change4] = React.useState(false);
+    const [head,change5]= React.useState("Show");
+    function handle(event){
+    change4(!flag);
+    head==="Show" ? change5("Hide"):change5("Show");
+    event.preventDefault();
+    }
+    function change1() {
+    change3("white");
+    }
+    function change2() {
+    change3("black");
+    }
+    return (
+        <div className="container">
+            <form onSubmit={handle} action="">
+            <button type="submit" style={{ backgroundColor: colors }} onMouseOver={change1} onMouseOut={change2} onClick={handle}>
+             {head} All Emojies 
+            </button>
+            </form>
+            {flag===false ?  "":<Dict/>}
+        </div>
+        
+);}
+// function Dict(){
+//    return  <dl className="dictionary">
+//        {emojis.map(CreateEntry)}
+//     </dl> ;
+// }
+export default Dic;
